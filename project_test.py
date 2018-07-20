@@ -17,6 +17,7 @@ print(ret)
 
 _,ctrs,_ = cv2.findContours(img_bnw.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 cv2.drawContours(img_bnw, ctrs, -1, (0,255,0), 3)
+
 rects = []
 #img_g = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 for ctr in ctrs:
@@ -53,7 +54,7 @@ i = 0
 #print(data)
 label = clf.predict(data)
 for rect in rects:
-    cv2.putText(img, str(label[i]), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 255), 3)
+    cv2.putText(img, str(label[i]), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 3)
     i += 1
 
 
