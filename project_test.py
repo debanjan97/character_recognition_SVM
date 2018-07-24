@@ -55,14 +55,46 @@ data = scaler.fit_transform(flat_data)
 i = 0
 #data = data[-len(rects):]
 #print(data)
-label = clf.predict(data)
-#label = clf.predict_proba(data)
-prob_per_class_dictionary = dict(zip(clf.classes_, label))
-print(label)
-labels_ordered_by_probability = map(lambda x: x[0], sorted(zip(clf.classes_, label), key=lambda x: x[1], reverse=True))
-print(labels_ordered_by_probability)
+#label = clf.predict(data)
+label = clf.predict_proba(data)
+
+#sort in descending and find highest 3 probabilities
+"""
+top3label=np.zeros(shape=(10,3))
+for i in range(len(label)):
+    label[i].sort()
+    label[i]=label[i][::-1]
+    top3label[i]=label[i][:3]
+
+
+prob_per_class_dictionary=[]
+for i in range(len(label)):
+    prob_per_class_dictionary.append(dict(sorted(zip(clf.classes_, label[i]))))
+    """
+#print(label)
+#print(top3label)
+print(clf.classes_)
+#print(prob_per_class_dictionary)
+
+
+#top3label=np.zeros(shape=(30,2))
+top3label=[]
+for i in range(len(label)):
+    view=sorted(zip(clf.classes_, label[i]), key= lambda x: x[1], reverse=True )
+    top3label.append(view[:3])
+"""    for ele in view[:3]:
+        top3label.append(ele)
+        print(ele)
+"""
+print("Rect sklearn {}".format(len(rects)))
+for i in range(len(label)):
+    print(top3label[i])
+ #  labels_ordered_by_probability = map(lambda x: x[0], sorted(zip(clf.classes_, label[i]), key= lambda x: x[1], reverse=True))
+
+#print(labels_ordered_by_probability)
+
 for rect in rects:
-    cv2.putText(img, str(label[i]), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 3)
+    cv2.putText(img, str(top3label[i]), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 3)
     i += 1
 
 cv2.imwrite("output.png",img)
