@@ -2,9 +2,11 @@ import cv2
 from sklearn.externals import joblib
 import numpy as np
 from sklearn import preprocessing
+
 from sklearn.decomposition import PCA
 
 clf = joblib.load("digits_cls.pkl")
+print(clf)
 flat_data = []
 
 img = cv2.imread("target.jpeg")
@@ -27,6 +29,7 @@ cv2.imwrite("target_example_bnw.png",img_bnw)
 
 #print(rects)
 scaler = preprocessing.MinMaxScaler()
+i=1
 for rect in rects:
     #data = flat_data
     cv2.rectangle(img,(rect[0],rect[1]),(rect[0] + rect[2],rect[1] + rect[3]),(0,255,0),3)
@@ -39,7 +42,7 @@ for rect in rects:
 #    roi = np.asarray(roi)
     cv2.imwrite("yo.png",roi)
     flat_data.append(roi.flatten())
-
+    i = i + 1
 
 flat_data = np.asarray(flat_data)
 
@@ -53,10 +56,13 @@ i = 0
 #data = data[-len(rects):]
 #print(data)
 label = clf.predict(data)
+#label = clf.predict_proba(data)
+prob_per_class_dictionary = dict(zip(clf.classes_, label))
+print(label)
+labels_ordered_by_probability = map(lambda x: x[0], sorted(zip(clf.classes_, label), key=lambda x: x[1], reverse=True))
+print(labels_ordered_by_probability)
 for rect in rects:
     cv2.putText(img, str(label[i]), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 3)
     i += 1
 
-
-
-cv2.imwrite("target_example.png",img)
+cv2.imwrite("output.png",img)

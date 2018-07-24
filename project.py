@@ -15,7 +15,7 @@ from sklearn import model_selection, preprocessing, neighbors,svm
 from sklearn.externals import joblib
 from sklearn.decomposition import PCA
 
-img_dir = "/home/eyexore/work/ardent/dope"
+img_dir = "/home/srinjoy/character_recognition_SVM/dope"
 data_path = os.path.join(img_dir,'*g')
 
 files = glob.glob(data_path)
@@ -74,7 +74,7 @@ data = scaler.fit_transform(flat_data)
 
 X_train, X_test, y_train, y_test = model_selection.train_test_split(data,label,test_size=0.3)
 
-clf = svm.SVC(gamma=0.001)
+clf = svm.SVC(gamma=0.001,probability=True)
 clf.fit(X_train,y_train)
 print(clf.score(X_test,y_test))
 joblib.dump(clf, "digits_cls.pkl", compress=3)
