@@ -79,9 +79,11 @@ print(clf.classes_)
 
 #top3label=np.zeros(shape=(30,2))
 top3label=[]
+labelX=[]
 for i in range(len(label)):
     view=sorted(zip(clf.classes_, label[i]), key= lambda x: x[1], reverse=True )
-    top3label.append(view[:3])
+    top3label.append(str(view[:3]))
+    labelX=str(top3label[i])
 """    for ele in view[:3]:
         top3label.append(ele)
         print(ele)
@@ -90,7 +92,7 @@ print("Rect sklearn {}".format(len(rects)))
 for i in range(len(label)):
     print(top3label[i])
  #  labels_ordered_by_probability = map(lambda x: x[0], sorted(zip(clf.classes_, label[i]), key= lambda x: x[1], reverse=True))
-
+print(top3label[0])
 #print(labels_ordered_by_probability)
 
 for rect in rects:
