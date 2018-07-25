@@ -74,29 +74,58 @@ for i in range(len(label)):
 #print(label)
 #print(top3label)
 print(clf.classes_)
+labelX=[]
 #print(prob_per_class_dictionary)
-
-
+for i in range(len(label)):
+    labelX.append([ round(elem,4) for elem in label[i] ])
+    #print(labelX[i])
 #top3label=np.zeros(shape=(30,2))
 top3label=[]
-labelX=[]
+
+label_name_list=[]
+label_proba_list=[]
 for i in range(len(label)):
-    view=sorted(zip(clf.classes_, label[i]), key= lambda x: x[1], reverse=True )
-    top3label.append(str(view[:3]))
-    labelX=str(top3label[i])
+    view=sorted(zip(clf.classes_, labelX[i]), key= lambda x: x[1], reverse=True )
+    #print(view[:3])
+    top3label.append(list(view[:3]))
+    #labelX=str(top3label[i])
+    #label_name,label_proba=zip(*view[:3])
+#    label_name_list.append(label_name)
+#    label_proba_list.append(label_proba)
+    #label_name.append(zip(*labelX[i]))
+
 """    for ele in view[:3]:
         top3label.append(ele)
         print(ele)
 """
 print("Rect sklearn {}".format(len(rects)))
+
 for i in range(len(label)):
     print(top3label[i])
+    print(top3label[i][0][0])
  #  labels_ordered_by_probability = map(lambda x: x[0], sorted(zip(clf.classes_, label[i]), key= lambda x: x[1], reverse=True))
-print(top3label[0])
 #print(labels_ordered_by_probability)
 
+i=0
 for rect in rects:
-    cv2.putText(img, str(top3label[i]), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 3)
-    i += 1
+    for j in range(len(top3label[0])):
+        for k in range(len(top3label[0][1])):
+            print(str(top3label[i][j][k]),end='  ')
+    print("")
+    i=i+1
 
+i=0
+x=0
+y=0
+
+for rect in rects:
+    y=-50
+    for j in range(len(top3label[0])):
+        #for k in range(len(top3label[0][1])):
+            #print(rect[0],end=' ')
+            #print(rect[1])
+            cv2.putText(img, str(top3label[i][j][0]), (rect[0], rect[1]+y),cv2.FONT_HERSHEY_DUPLEX, 0.6, (0, 0, 255), 1)
+            cv2.putText(img, str(round(top3label[i][j][1]*100,2))+"%", (rect[0]+22, rect[1]+y),cv2.FONT_HERSHEY_DUPLEX, 0.6, (0, 0, 255), 1)
+            y +=20
+    i += 1
 cv2.imwrite("output.png",img)
