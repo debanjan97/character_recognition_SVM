@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Jul 17 22:28:35 2018
 
-@author: eyexore
-"""
 import time
 import cv2
 import os
@@ -15,13 +11,17 @@ from sklearn import model_selection, preprocessing, neighbors,svm
 from sklearn.externals import joblib
 from sklearn.decomposition import PCA
 
-img_dir = "/home/eyexore/work/ardent/dope"
+#please change image_dir to the directory you have saved dope in
+
+img_dir = "/home/srinjoy/character_recognition_SVM/dope"
 data_path = os.path.join(img_dir,'*g')
 
 files = glob.glob(data_path)
 #print(type(files))
 files.sort()
 
+#magic defines how many images in the datasets are used for training
+#magic=2 means that every one of 2 images are taken
 magic = 2
 
 img = np.array([])
@@ -43,9 +43,12 @@ for f in files:
 		#os.system("cp %s /home/eyexore/work/ardent/dope_test/%c.png"%(f,label[i]))
 	i += 1
 
+#prints the number of images used to train our model
 print("Number of Images = %d"%(i/magic))
 i = 1
 label = []
+
+#the csv file holds the labels of each 1071 examples sampled of each character
 with open('label_dope.csv','rt') as label_file:
 	reader = csv.reader(label_file)
 	for row in reader:
@@ -72,9 +75,18 @@ data = scaler.fit_transform(flat_data)
 #data = pca.fit_transform(data)
 #print("PCA done")
 
+#we define the training and testing set
 X_train, X_test, y_train, y_test = model_selection.train_test_split(data,label,test_size=0.3)
 
-clf = svm.SVC(gamma=0.001)
+#using SVM and probabilty value set to true to get corresponding probabilty values as well
+clf = svm.SVC(gamma=0.001,probability=True)
+
 clf.fit(X_train,y_train)
+
+#print the accuracy score of our model
+#print("Accuracy is : {}".format(clf.score(X_test,y_test)))
+
 print(clf.score(X_test,y_test))
+
+#dump the trained mdoel in a pickle file to be used later 
 joblib.dump(clf, "digits_cls.pkl", compress=3)
